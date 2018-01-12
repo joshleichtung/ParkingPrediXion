@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import './App.css';
-import ReactMapboxGl, { Layer, Feature, Marker, ScaleControl } from "react-mapbox-gl";
-import axios from 'axios'
+import React, { Component } from 'react'
+import './App.css'
+import ReactMapboxGl, { Layer, Feature, Marker, ScaleControl } from "react-mapbox-gl"
+import { getParkingLocations } from './api'
 
 const Map = ReactMapboxGl({
   accessToken: "pk.eyJ1Ijoia2V2aW5jYWk3OSIsImEiOiJjajk2YXBqMHUwMjd6MnpvbHU3a3FiODE4In0.Akrpxhy1oIxzIQ34EB1adg"
-});
+})
 
 class App extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       coordinates: [-117.157122, 32.712854],
       textInput: '',
@@ -20,20 +20,20 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // navigator.geolocation.getCurrentPosition((position) => {
-    //   this.setState({coordinates: [position.coords.longitude, position.coords.latitude]});
-    // });
-    axios.get(`https://fiery-doves-server.run.aws-usw02-pr.ice.predix.io?timestamp=${Number(new Date)}`)
+    navigator.geolocation.getCurrentPosition((position) => 
+      this.setState({
+        coordinates: [position.coords.longitude, position.coords.latitude]
+      }))
+
+    getParkingLocations(new Date)
       .then(res => {
         console.log(res)
-        this.setState({parking: res.data});
-      });
+        this.setState({parking: res.data})
+      })
   }
 
   updateTextInput(e) {
-    this.setState({
-      textInput: e.target.value
-    })
+    this.setState({ textInput: e.target.value })
   }
 
   submitTextInput(e) {
@@ -50,7 +50,7 @@ class App extends Component {
   _onStyleLoad(map, event) {
     this.state.parking.forEach(spot => {
       map.addLayer(spot)
-    });
+    })
   }
 
   render() {
@@ -87,8 +87,8 @@ class App extends Component {
           }}
         />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
