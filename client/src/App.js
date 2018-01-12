@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import './App.css'
 import ReactMapboxGl, { Layer, Feature, Marker, ScaleControl } from "react-mapbox-gl"
-import { getParkingLocations } from './api'
+import { getParkingLocations, getMapCoordinates, MAPBOX_API_TOKEN } from './api'
 
 const Map = ReactMapboxGl({
-  accessToken: "pk.eyJ1Ijoia2V2aW5jYWk3OSIsImEiOiJjajk2YXBqMHUwMjd6MnpvbHU3a3FiODE4In0.Akrpxhy1oIxzIQ34EB1adg"
+  accessToken: MAPBOX_API_TOKEN
 })
 
 class App extends Component {
@@ -38,8 +38,7 @@ class App extends Component {
 
   submitTextInput(e) {
     if(e.key === 'Enter') {
-      let url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURI(this.state.textInput)}.json?access_token=pk.eyJ1Ijoia2V2aW5jYWk3OSIsImEiOiJjajk2YXBqMHUwMjd6MnpvbHU3a3FiODE4In0.Akrpxhy1oIxzIQ34EB1adg`
-      axios.get(url)
+      getMapCoordinates(this.state.textInput)
         .then(({data}) => this.setState({
           coordinates: data.features[0].center
         }))
