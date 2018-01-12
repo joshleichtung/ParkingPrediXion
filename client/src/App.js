@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import './App.css';
-import ReactMapboxGl, { Layer, Popup, Feature, Marker, ScaleControl } from "react-mapbox-gl";
-import axios from 'axios'
+import React, { Component } from 'react'
+import './App.css'
+import ReactMapboxGl, { Marker, ScaleControl, Popup } from "react-mapbox-gl"
+import { getParkingLocations, getMapCoordinates, MAPBOX_API_TOKEN } from './api'
 
 const ParkingIconUrl = "https://www.xtreet.org/img/icn_big_marker_parking.png"
 
 const Map = ReactMapboxGl({
-  accessToken: "pk.eyJ1Ijoia2V2aW5jYWk3OSIsImEiOiJjajk2YXBqMHUwMjd6MnpvbHU3a3FiODE4In0.Akrpxhy1oIxzIQ34EB1adg"
-});
+  accessToken: MAPBOX_API_TOKEN
+})
 
 class App extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       coordinates: [-117.157122, 32.712854],
       textInput: '',
@@ -24,7 +24,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get(`https://fiery-doves-server-v2.run.aws-usw02-pr.ice.predix.io?ts=${Math.floor(Number(new Date()) / 1000)}&long=${this.state.coordinates[0]}&lat=${this.state.coordinates[1]}`)
+    navigator.geolocation.getCurrentPosition((position) => 
+      this.setState({
+        coordinates: [position.coords.longitude, position.coords.latitude]
+      }))
+
+    getParkingLocations(...this.state.coordinates, new Date)
       .then(({ data: {zones, suggestions}}) => {
         console.log("zones: ", zones, "suggestions: ", suggestions)
         this.setState({
@@ -35,20 +40,13 @@ class App extends Component {
       .catch(error => console.log("Ali Server error: ", error))
   }
 
-  componentDidUpdate() {
-    console.log("update")
-  }
-
   updateTextInput(e) {
-    this.setState({
-      textInput: e.target.value
-    })
+    this.setState({ textInput: e.target.value })
   }
 
   submitTextInput(e) {
     if(e.key === 'Enter') {
-      let url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURI(this.state.textInput)}.json?access_token=pk.eyJ1Ijoia2V2aW5jYWk3OSIsImEiOiJjajk2YXBqMHUwMjd6MnpvbHU3a3FiODE4In0.Akrpxhy1oIxzIQ34EB1adg`
-      axios.get(url)
+      getMapCoordinates(this.state.textInput)
         .then(({data}) => this.setState({
           coordinates: data.features[0].center
         }))
@@ -59,7 +57,7 @@ class App extends Component {
   _onStyleLoad(map, event) {
     this.state.parking.forEach(spot => {
       map.addLayer(spot)
-    });
+    })
   }
 
   render() {
@@ -148,8 +146,8 @@ class App extends Component {
         </ul>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

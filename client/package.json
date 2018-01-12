@@ -3,13 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.17.0",
+    "axios": "0.17.0",
     "mapbox-gl": "^0.41.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-mapbox-gl": "^2.7.0",
-    "react-scripts": "1.0.14",
-    "axios": "0.17.0"
+    "react-scripts": "1.0.14"
   },
   "scripts": {
     "start": "react-scripts start",
