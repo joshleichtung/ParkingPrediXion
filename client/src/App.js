@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import './App.css'
-import ReactMapboxGl, { Marker, ScaleControl, Popup } from "react-mapbox-gl"
+import ReactMapboxGl, { Marker, Popup } from "react-mapbox-gl"
 import { getParkingLocations, getMapCoordinates, MAPBOX_API_TOKEN } from './api'
 
-const ParkingIconUrl = "https://www.xtreet.org/img/icn_big_marker_parking.png"
+const ParkingIconUrl = "https://cdn4.iconfinder.com/data/icons/map-pins-2/256/16-512.png"
 
 const Map = ReactMapboxGl({
   accessToken: MAPBOX_API_TOKEN
@@ -29,7 +29,7 @@ class App extends Component {
         coordinates: [position.coords.longitude, position.coords.latitude]
       }))
 
-    getParkingLocations(...this.state.coordinates, new Date)
+    getParkingLocations(...this.state.coordinates, new Date())
       .then(({ data: {zones, suggestions}}) => {
         console.log("zones: ", zones, "suggestions: ", suggestions)
         this.setState({
@@ -77,7 +77,7 @@ class App extends Component {
           <Marker
             coordinates={this.state.coordinates}
           >
-            <img src="pin.png" style={{height: "45px", width: "45px"}}/>
+            <img src="pin.png" style={{height: "45px", width: "45px"}} alt="current location pin" />
           </Marker>
           {this.state.suggestions.map(({msg, long, lat}, idx) => (
             <div key={idx} >
@@ -91,7 +91,7 @@ class App extends Component {
             <Marker
               coordinates={[long, lat]}
             >
-              <img src={ParkingIconUrl} style={{height: "35px", width: "35px"}}/>
+              <img src={ParkingIconUrl} style={{height: "35px", width: "35px"}} alt="parking location pin" />
             </Marker>
           </div>
           ))}
@@ -134,13 +134,12 @@ class App extends Component {
           <ul style={{padding: "0"}} className={this.state.showSuggestions ? "" : "hidden"}>
           {this.state.suggestions.map(({msg, long, lat}, idx) => (
             <li style={{listStyleType: "none"}} key={idx}>
-            <a  href="#"
-                onClick={() => this.setState({
-              coordinates: [long, lat]
-            })}
-          >
-            {msg.trim()}
-          </a>
+              <a
+                href="#"
+                onClick={() => this.setState({ coordinates: [long, lat] })}
+              >
+                {msg.trim()}
+              </a>
         </li>
           ))}
         </ul>
