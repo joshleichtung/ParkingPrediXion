@@ -1,6 +1,6 @@
 # Parking PrediXion
 ## About
-Winner at the 2017 GE Minds + Machines Appathon.
+Winner at the 2017 GE Minds + Machines Appathon. See the [live version](https://fiery-doves-parking-v3.run.aws-usw02-pr.ice.predix.io/) (GE's CityIQ API only provided information about a small area of San Diego. To view the predictions for that area, search for "600 8th St, San Diego CA").
 <p align="center">
   <img width="262" height="528" src="https://github.com/joshleichtung/ParkingPrediXion/blob/development/readme_assets/parking-predixion-example.gif?raw=true">
 </p>
